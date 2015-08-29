@@ -4,14 +4,13 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
-#include <GL/glfw.h>
-#include <gl.h>
+#include <GL/glfw3.h>
 #include <ctime>
 
 #include <vector>
 
-int AQUAR_SIZEX = 800;
-int AQUAR_SIZEY = 600;
+int *AQUAR_SIZEX = new int;
+int *AQUAR_SIZEY = new int;
 
 static int frame = 0;
 
@@ -100,8 +99,8 @@ FISH::FISH()
     targangle = (rand()%360);
     movspeed = (rand()%4)+2;
 
-    xpos = rand()%AQUAR_SIZEX;
-    ypos = rand()%AQUAR_SIZEY;
+    xpos = rand()%*AQUAR_SIZEX;
+    ypos = rand()%*AQUAR_SIZEY;
 
     isAlive = true;
 
@@ -142,16 +141,16 @@ void FISH::draw()
 
     float colors[] =
     {
-        cols[0].r, cols[0].g, cols[0].b,
-        cols[1].r, cols[1].g, cols[1].b,
-        cols[2].r, cols[2].g, cols[2].b,
-        cols[3].r, cols[3].g, cols[3].b
+        cols[0].r, cols[0].g, cols[0].b, hunger,
+        cols[1].r, cols[1].g, cols[1].b, hunger,
+        cols[2].r, cols[2].g, cols[2].b, hunger,
+        cols[3].r, cols[3].g, cols[3].b, hunger
     };
 
     glEnableClientState( GL_VERTEX_ARRAY );
     glEnableClientState( GL_COLOR_ARRAY );
     glVertexPointer( 2, GL_FLOAT, 0, verts );
-    glColorPointer( 3, GL_FLOAT, 0, colors );
+    glColorPointer( 4, GL_FLOAT, 0, colors );
 
     glDrawArrays( GL_TRIANGLE_FAN, 0, 4 );
     glDisableClientState( GL_VERTEX_ARRAY );
@@ -216,8 +215,8 @@ void FISH::fishmov()
     if( !(rand()%20) )
     {
 
-        tarx = rand()%AQUAR_SIZEX;
-        tary = rand()%AQUAR_SIZEY;
+        tarx = rand()%*AQUAR_SIZEX;
+        tary = rand()%*AQUAR_SIZEY;
 
     }
     targangle = getinclin( xpos, ypos, tarx, tary );
@@ -230,13 +229,13 @@ void FISH::fishmov()
     movang = normalizeang( movang );
 
     if( xpos < -50.0f )
-        xpos = AQUAR_SIZEX+50.0f;
-    else if( xpos > AQUAR_SIZEX+50.0f )
+        xpos = *AQUAR_SIZEX+50.0f;
+    else if( xpos > *AQUAR_SIZEX+50.0f )
         xpos = -50.0f;
 
     if( ypos < -50.0f )
-        ypos = AQUAR_SIZEY+50.0f;
-    else if( ypos > AQUAR_SIZEY+50.0f )
+        ypos = *AQUAR_SIZEY+50.0f;
+    else if( ypos > *AQUAR_SIZEY+50.0f )
         ypos = -50.0f;
 
     xpos += degcos( movang )*movspeed;

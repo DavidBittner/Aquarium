@@ -1,6 +1,6 @@
-#include <GL/glfw.h>
-#include <te.h>
+#include <GL/glfw3.h>
 #include "ai_fish.h"
+#include "mouse.h"
 
 #include <chrono>
 #include <thread>
@@ -18,33 +18,32 @@ void Reshape( GLFWwindow *wind, int width, int height )
 
 }
 
-void createFishies()
-{
-
-    for(;;)
-    {
-        std::this_thread::sleep_for( std::chrono::seconds(1) );
-        fish.push_back( FISH() );
-    }
-}
-
 int main()
 {
 
-    std::thread create( createFishies );
-
     glfwInit();
-    GLFWwindow *window = glfwCreateWindow( AQUAR_SIZEX, AQUAR_SIZEY, "Test", nullptr, nullptr );
+    GLFWwindow *window = glfwCreateWindow( 800, 600, "Test", nullptr, nullptr );
     glfwMakeContextCurrent( window );
     glfwSetWindowSizeCallback( window, Reshape );
 
-    Reshape( window, AQUAR_SIZEX, AQUAR_SIZEY );
+    glfwSetCursorPosCallback( window, MousePosFunc );
+    glfwSetMouseButtonCallback( window, MouseButtonFunc );
+
+    Reshape( window, 800, 600 );
+
+    glfwGetWindowSize( window, AQUAR_SIZEX, AQUAR_SIZEY );
+
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
     while( !glfwWindowShouldClose( window ) )
     {
 
         glClear( GL_COLOR_BUFFER_BIT );
         glLoadIdentity();
+
+        if( mouseClick )
+            fish.push_back( FISH() );
 
         glTranslatef( 0.0f, 0.0f, -1.0f );
         for( unsigned i = 0; i < fish.size(); i++ )
@@ -63,11 +62,12 @@ int main()
 
         }
 
+        ResetKeys();
         glfwPollEvents();
         glfwSwapBuffers( window );
 
         std::this_thread::sleep_for( std::chrono::milliseconds(16) );
-
+        
     }
 
     glfwTerminate();
