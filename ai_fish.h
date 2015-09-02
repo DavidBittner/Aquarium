@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <GL/glfw3.h>
 #include <ctime>
+#include "collision.h"
 
 #include <vector>
 
@@ -78,7 +79,7 @@ class FISH
 
         float targangle;
 
-        float xpos, ypos;
+        rect fishrect;
         float tarx, tary;
 
         float hunger;
@@ -92,15 +93,17 @@ class FISH
 FISH::FISH()
 {
 
-    //Basic initialization, including setting the rand seed.
-    srand(time(nullptr));
+    //Basic initialization.
 
     movang = 90.0f;
     targangle = (rand()%360);
     movspeed = (rand()%4)+2;
 
-    xpos = rand()%*AQUAR_SIZEX;
-    ypos = rand()%*AQUAR_SIZEY;
+    fishrect.x = rand()%*AQUAR_SIZEX;
+    fishrect.y = rand()%*AQUAR_SIZEY;
+
+    fishrect.w = 15.0f;
+    fishrect.h = 15.0f;
 
     isAlive = true;
 
@@ -128,15 +131,15 @@ void FISH::draw()
 
     glPushMatrix();
 
-    glTranslatef( xpos, ypos, 0.0f );
+    glTranslatef( fishrect.x, fishrect.y, 0.0f );
     glRotatef( movang, 0.0f, 0.0f, 1.0f );
 
     float verts[] =
     {
         0.0f, 0.0f,
-        15.0f, 0.0f,
-        15.0f, 15.0f,
-        0.0f, 15.0f
+        fishrect.w, 0.0f,
+        fishrect.w, fishrect.h,
+        0.0f, fishrect.h
     };
 
     float colors[] =
@@ -219,7 +222,7 @@ void FISH::fishmov()
         tary = rand()%*AQUAR_SIZEY;
 
     }
-    targangle = getinclin( xpos, ypos, tarx, tary );
+    targangle = getinclin( fishrect.x, fishrect.y, tarx, tary );
 
     if( movang+720 < targangle+720 )
         movang+=4;
@@ -228,18 +231,18 @@ void FISH::fishmov()
 
     movang = normalizeang( movang );
 
-    if( xpos < -50.0f )
-        xpos = *AQUAR_SIZEX+50.0f;
-    else if( xpos > *AQUAR_SIZEX+50.0f )
-        xpos = -50.0f;
+    if( fishrect.x < -50.0f )
+        fishrect.x = *AQUAR_SIZEX+50.0f;
+    else if( fishrect.x > *AQUAR_SIZEX+50.0f )
+        fishrect.x = -50.0f;
 
-    if( ypos < -50.0f )
-        ypos = *AQUAR_SIZEY+50.0f;
-    else if( ypos > *AQUAR_SIZEY+50.0f )
-        ypos = -50.0f;
+    if( fishrect.y < -50.0f )
+        fishrect.y = *AQUAR_SIZEY+50.0f;
+    else if( fishrect.y > *AQUAR_SIZEY+50.0f )
+        fishrect.y = -50.0f;
 
-    xpos += degcos( movang )*movspeed;
-    ypos += degsin( movang )*movspeed;
+    fishrect.x += degcos( movang )*movspeed;
+    fishrect.y += degsin( movang )*movspeed;
 
     hunger-=0.0005f;
     if( hunger <= 0.0f )

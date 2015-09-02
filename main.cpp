@@ -7,6 +7,9 @@
 
 std::vector<FISH> fish;
 
+const int SCREEN_SIZE_WID = 800;
+const int SCREEN_SIZE_HEI = 600;
+
 void Reshape( GLFWwindow *wind, int width, int height )
 {
 
@@ -21,24 +24,32 @@ void Reshape( GLFWwindow *wind, int width, int height )
 int main()
 {
 
+    //Basic initalization as well as setting up the screen size and so on.
     glfwInit();
-    GLFWwindow *window = glfwCreateWindow( 800, 600, "Test", nullptr, nullptr );
+    GLFWwindow *window = glfwCreateWindow( SCREEN_SIZE_WID, SCREEN_SIZE_HEI, "Test", nullptr, nullptr );
     glfwMakeContextCurrent( window );
     glfwSetWindowSizeCallback( window, Reshape );
 
+    //Setting various callbacks for the cursor/mouse clicks.
     glfwSetCursorPosCallback( window, MousePosFunc );
     glfwSetMouseButtonCallback( window, MouseButtonFunc );
+    
+    //Reshaping the screen to support the new scale.
+    Reshape( window, SCREEN_SIZE_WID, SCREEN_SIZE_HEI );
 
-    Reshape( window, 800, 600 );
-
+    //Also, setting the aquar size variables to the current size of the screen.
     glfwGetWindowSize( window, AQUAR_SIZEX, AQUAR_SIZEY );
 
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
+    srand( time(nullptr) );
+
     while( !glfwWindowShouldClose( window ) )
     {
 
+        glfwGetWindowSize( window, AQUAR_SIZEX, AQUAR_SIZEY );
+       
         glClear( GL_COLOR_BUFFER_BIT );
         glLoadIdentity();
 
