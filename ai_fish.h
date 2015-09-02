@@ -6,9 +6,10 @@
 #include <cstdlib>
 #include <GL/glfw3.h>
 #include <ctime>
-#include "collision.h"
 
 #include <vector>
+
+#include "class_fishfood.h"
 
 int *AQUAR_SIZEX = new int;
 int *AQUAR_SIZEY = new int;
@@ -22,43 +23,6 @@ float degcos( float ang )
 float degsin( float ang )
 {
     return sin( ang * 0.0174532925 );
-}
-
-struct color
-{
-    color();
-    color( float rr, float gg, float bb );
-
-    float r, g, b;
-    void randomize();
-
-};
-
-color::color()
-{
-
-    r = 1.0f;
-    g = 1.0f;
-    b = 1.0f;
-
-}
-
-color::color( float rr, float gg, float bb )
-{
-
-    r = rr;
-    g = gg;
-    b = bb;
-
-}
-
-void color::randomize()
-{
-
-    r = (rand()%1000)/1000.0f;
-    g = (rand()%1000)/1000.0f;
-    b = (rand()%1000)/1000.0f;
-
 }
 
 class FISH

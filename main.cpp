@@ -6,6 +6,7 @@
 #include <thread>
 
 std::vector<FISH> fish;
+std::vector<FishPellet> fishfood;
 
 const int SCREEN_SIZE_WID = 800;
 const int SCREEN_SIZE_HEI = 600;
@@ -54,7 +55,7 @@ int main()
         glLoadIdentity();
 
         if( mouseClick )
-            fish.push_back( FISH() );
+            fishfood.push_back( FishPellet( mousex, *AQUAR_SIZEY-mousey ) );
 
         glTranslatef( 0.0f, 0.0f, -1.0f );
         for( unsigned i = 0; i < fish.size(); i++ )
@@ -72,6 +73,8 @@ int main()
                 fish[i].draw();
 
         }
+        for( unsigned i = 0; i < fishfood.size(); i++ )
+            fishfood[i].draw();
 
         ResetKeys();
         glfwPollEvents();
