@@ -44,7 +44,7 @@ class FishPellet
         FishPellet( float x, float y );
 
         void draw();
-        rect GetPos();
+        rect *getPos();
 
     private:
         rect pos;
@@ -60,6 +60,13 @@ FishPellet::FishPellet( float x, float y ):col( 0.505f, 0.301f, 0.188f )
 
     pos.w = 7.5f;
     pos.h = 7.5f;
+
+}
+
+rect *FishPellet::getPos()
+{
+
+    return &pos;
 
 }
 

@@ -46,6 +46,9 @@ int main()
 
     srand( time(nullptr) );
 
+    for( int i = 0; i < 10; i++ )
+        fish.push_back( FISH() );
+
     while( !glfwWindowShouldClose( window ) )
     {
 
@@ -61,6 +64,26 @@ int main()
         for( unsigned i = 0; i < fish.size(); i++ )
         {
 
+            if( fish[i].isHungry() )
+            {
+                for( unsigned j = 0; j < fishfood.size(); j++ )
+                {
+
+                    if( AABB( *fishfood[j].getPos(), *fish[i].getPos() ) )
+                    {
+
+                        fishfood.erase( fishfood.begin() + j );
+                        j--;
+
+                        fish[i].ate();
+
+                    }
+                }
+            }
+
+            //Give the fish a list of the food so it knows where to look.
+            fish[i].getFood( fishfood );
+            //Move the fish around.
             fish[i].fishmov();
 
             if( fish[i].isDead() )
